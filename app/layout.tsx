@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
 import { CustomCursor } from "@/components/layout/CustomCursor";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { publicPath } from "@/lib/paths";
 
 import type { Viewport } from "next";
 
@@ -24,8 +25,8 @@ export const metadata: Metadata = {
     "Flutter",
   ],
   icons: {
-    icon: "/logo white.png",
-    apple: "/logo white.png",
+    icon: publicPath("/logo white.png"),
+    apple: publicPath("/logo white.png"),
   },
 };
 

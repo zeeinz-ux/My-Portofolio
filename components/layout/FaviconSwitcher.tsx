@@ -2,19 +2,14 @@
 
 import { useEffect } from "react";
 import { useTheme } from "@/providers/ThemeProvider";
+import { publicPath } from "@/lib/paths";
 
-/**
- * Dynamically swaps the favicon based on the active theme.
- * Light theme → black logo (visible on light browser tabs)
- * Dark theme  → white logo (visible on dark browser tabs)
- */
 export const FaviconSwitcher = () => {
   const { theme } = useTheme();
 
   useEffect(() => {
-    const logo = theme === "dark" ? "/logo white.png" : "/logo black.png";
+    const logo = publicPath(theme === "dark" ? "/logo white.png" : "/logo black.png");
     
-    // Find or create the favicon link element
     let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
     if (!link) {
       link = document.createElement("link");

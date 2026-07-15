@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
+import { publicPath } from "@/lib/paths";
 
 const NAV_LINKS = [
   { label: "Home", id: "home" },
@@ -98,13 +98,12 @@ export const Navbar = () => {
             onClick={() => scrollTo("home")}
             className={`flex items-center gap-2.5 transition-opacity hover:opacity-70 ${textColor}`}
           >
-            <Image
-              src={isDark ? "/logo white.png" : "/logo black.png"}
+            <img
+              src={publicPath(isDark ? "/logo white.png" : "/logo black.png")}
               alt="Zeinz Logo"
               width={20}
               height={20}
               className="object-contain"
-              priority
             />
             <span
               className="text-lg font-bold"

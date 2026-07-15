@@ -11,8 +11,8 @@ import {
   ArrowUp,
   Heart,
 } from "lucide-react";
-import Image from "next/image";
 import { useTheme } from "@/providers/ThemeProvider";
+import { publicPath } from "@/lib/paths";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -480,8 +480,8 @@ export const CinematicFooter = () => {
             <div
               className={`flex items-center gap-2.5 transition-colors duration-500 ${isDark ? "text-white" : "text-zinc-900"}`}
             >
-              <Image
-                src={isDark ? "/logo white.png" : "/logo black.png"}
+              <img
+                src={publicPath(isDark ? "/logo white.png" : "/logo black.png")}
                 alt="Zeinz Logo"
                 width={22}
                 height={22}

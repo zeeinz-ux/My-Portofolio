@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { useTheme } from "@/providers/ThemeProvider";
+import { publicPath } from "@/lib/paths";
 
 export const LoadingScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -52,13 +52,12 @@ export const LoadingScreen = () => {
                 x: { delay: 1.0, duration: 0.8, ease: [0.76, 0, 0.24, 1] },
               }}
             >
-              <Image
-                src={isDark ? "/logo white.png" : "/logo black.png"}
+              <img
+                src={publicPath(isDark ? "/logo white.png" : "/logo black.png")}
                 alt="Zeinz Logo"
                 width={45}
                 height={45}
                 className="object-contain"
-                priority
               />
             </motion.div>
 
