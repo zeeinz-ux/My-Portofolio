@@ -145,6 +145,7 @@ export const AboutSection = () => {
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}
+                loading="lazy"
                 className="absolute inset-0 z-10 w-full h-full object-cover dark:grayscale transition-all duration-700"
               />
 

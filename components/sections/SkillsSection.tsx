@@ -204,6 +204,7 @@ export const SkillsSection = () => {
                                     : `https://cdn.simpleicons.org/${skill.icon}/${isDark ? "white" : "333333"}`
                                 }
                                 alt={skill.name}
+                                loading="lazy"
                                 className={`w-5 h-5 opacity-50 group-hover/skill:opacity-100 transition-opacity duration-300 ${skill.icon === "vscode" && !isDark ? "grayscale" : ""}`}
                               />
                               <span
@@ -233,6 +234,7 @@ export const SkillsSection = () => {
                                 : `https://cdn.simpleicons.org/${skill.icon}/${isDark ? "white" : "333333"}`
                             }
                             alt={skill.name}
+                            loading="lazy"
                             className={`w-5 h-5 opacity-50 group-hover/skill:opacity-100 transition-opacity duration-300 ${skill.icon === "vscode" && !isDark ? "grayscale" : ""}`}
                           />
                           <span

@@ -235,36 +235,57 @@ const WovenCanvas = () => {
     };
     if (!isMobile) window.addEventListener("mousemove", handleMouseMove);
 
-    // --- Animation loop ---
+    // --- Pre-allocated vectors (avoid GC pressure) ---
+    const mouseWorld = new THREE.Vector3();
+    const currentPos = new THREE.Vector3();
+    const originalPos = new THREE.Vector3();
+    const velocityVec = new THREE.Vector3();
+    const dirVec = new THREE.Vector3();
+    const subVec = new THREE.Vector3();
+
     let animId: number;
+    let isVisible = true;
+
+    const onVisibilityChange = () => {
+      isVisible = !document.hidden;
+      if (isVisible) {
+        clock.start();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     const animate = () => {
       animId = requestAnimationFrame(animate);
+
+      if (!isVisible) return;
+
       const elapsedTime = clock.getElapsedTime();
-      const mouseWorld = new THREE.Vector3(mouse.x * 3, mouse.y * 3, 0);
+      mouseWorld.set(mouse.x * 3, mouse.y * 3, 0);
 
       for (let i = 0; i < particleCount; i++) {
         const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
 
-        const currentPos = new THREE.Vector3(positions[ix], positions[iy], positions[iz]);
-        const originalPos = new THREE.Vector3(originalPositions[ix], originalPositions[iy], originalPositions[iz]);
-        const velocity = new THREE.Vector3(velocities[ix], velocities[iy], velocities[iz]);
+        currentPos.set(positions[ix], positions[iy], positions[iz]);
+        originalPos.set(originalPositions[ix], originalPositions[iy], originalPositions[iz]);
+        velocityVec.set(velocities[ix], velocities[iy], velocities[iz]);
 
         const dist = currentPos.distanceTo(mouseWorld);
         if (dist < 1.5) {
           const force = (1.5 - dist) * 0.01;
-          const dir = new THREE.Vector3().subVectors(currentPos, mouseWorld).normalize();
-          velocity.add(dir.multiplyScalar(force));
+          dirVec.subVectors(currentPos, mouseWorld).normalize();
+          velocityVec.add(dirVec.multiplyScalar(force));
         }
 
-        velocity.add(new THREE.Vector3().subVectors(originalPos, currentPos).multiplyScalar(0.001));
-        velocity.multiplyScalar(0.95);
+        subVec.subVectors(originalPos, currentPos).multiplyScalar(0.001);
+        velocityVec.add(subVec);
+        velocityVec.multiplyScalar(0.95);
 
-        positions[ix] += velocity.x;
-        positions[iy] += velocity.y;
-        positions[iz] += velocity.z;
-        velocities[ix] = velocity.x;
-        velocities[iy] = velocity.y;
-        velocities[iz] = velocity.z;
+        positions[ix] += velocityVec.x;
+        positions[iy] += velocityVec.y;
+        positions[iz] += velocityVec.z;
+        velocities[ix] = velocityVec.x;
+        velocities[iy] = velocityVec.y;
+        velocities[iz] = velocityVec.z;
       }
 
       geometry.attributes.position.needsUpdate = true;
@@ -284,6 +305,7 @@ const WovenCanvas = () => {
     return () => {
       cancelAnimationFrame(animId);
       observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("resize", handleResize);
       if (!isMobile) window.removeEventListener("mousemove", handleMouseMove);
       if (mountRef.current?.contains(renderer.domElement)) {

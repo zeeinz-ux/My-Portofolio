@@ -70,20 +70,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Smooth color / bg transitions for theme switching */
-  *,
-  *::before,
-  *::after {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Smooth color / bg transitions for theme switching on body only.
+     Individual components use Tailwind transition-colors for scoped control. */
+  body {
+    transition-property: background-color, color;
     transition-duration: 400ms;
-  }
-
-  /* Exceptions — keep transform/opacity transitions snappy */
-  *[class*="animate-"],
-  *[class*="motion-"],
-  canvas {
-    transition-property: none !important;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
