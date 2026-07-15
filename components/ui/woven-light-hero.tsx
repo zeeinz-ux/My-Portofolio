@@ -21,14 +21,14 @@ export const WovenLightHero = ({ onExplore }: WovenLightHeroProps) => {
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.04 + 2.8,
-        duration: 1.2,
+        delay: i * 0.025 + 1.2,
+        duration: 0.9,
         ease: [0.2, 0.65, 0.3, 0.9],
       },
     }));
     buttonControls.start({
       opacity: 1,
-      transition: { delay: 3.5, duration: 1 },
+      transition: { delay: 1.8, duration: 0.8 },
     });
   }, [textControls, buttonControls]);
 

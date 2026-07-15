@@ -18,7 +18,7 @@ export const HeroSection = () => {
         onClick={scrollToAbout}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3.5, duration: 1 }}
+        transition={{ delay: 1.8, duration: 0.8 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/40 hover:text-white/80 transition-colors"
         aria-label="Scroll down"
       >
