@@ -9,6 +9,7 @@ import {
   Code2,
   Zap,
 } from "lucide-react";
+import { publicPath } from "@/lib/paths";
 
 const INFO_ITEMS = [
   { Icon: MapPin, label: "Location", value: "Indonesia" },
@@ -140,7 +141,7 @@ export const AboutSection = () => {
               {/* Stylised portrait placeholder — replace src with real photo */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/portrait.png"
+                src={publicPath("/portrait.png")}
                 alt="Zeinz"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
@@ -227,7 +228,7 @@ export const AboutSection = () => {
               {/* CTAs */}
               <div className="about-fade flex flex-wrap gap-4 mb-16 opacity-0">
                 <a
-                  href="/cv.pdf"
+                  href={publicPath("/cv.pdf")}
                   download
                   className="flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-full text-sm font-medium hover:bg-violet-700 transition-colors"
                 >
