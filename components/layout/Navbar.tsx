@@ -54,6 +54,14 @@ export const Navbar = () => {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   // ── Derived styles — purely theme-driven ──
   // Since the hero now matches the theme, text color is consistent throughout the page.
 
@@ -116,9 +124,10 @@ export const Navbar = () => {
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <button
+              <a
                 key={link.id}
-                onClick={() => scrollTo(link.id)}
+                href={`#${link.id}`}
+                onClick={(e) => { e.preventDefault(); scrollTo(link.id); }}
                 className={`text-sm font-medium tracking-wide transition-all duration-200 ${
                   activeSection === link.id
                     ? `${textColor} opacity-100`
@@ -127,7 +136,7 @@ export const Navbar = () => {
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 {link.label}
-              </button>
+              </a>
             ))}
           </div>
 
@@ -151,6 +160,8 @@ export const Navbar = () => {
             <button
               onClick={() => setMenuOpen((p) => !p)}
               aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
               className={`md:hidden p-2 transition-colors ${textColor}`}
             >
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -163,6 +174,10 @@ export const Navbar = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
             initial={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
             animate={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
             exit={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
@@ -170,17 +185,18 @@ export const Navbar = () => {
             className={`fixed inset-0 z-40 ${mobileBg} flex flex-col items-center justify-center gap-10`}
           >
             {NAV_LINKS.map((link, i) => (
-              <motion.button
+              <motion.a
                 key={link.id}
+                href={`#${link.id}`}
+                onClick={(e) => { e.preventDefault(); scrollTo(link.id); }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.07, duration: 0.5 }}
-                onClick={() => scrollTo(link.id)}
                 className={`text-5xl font-bold ${mobileLinkColor} ${mobileHoverColor} transition-colors`}
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 {link.label}
-              </motion.button>
+              </motion.a>
             ))}
 
             <motion.button

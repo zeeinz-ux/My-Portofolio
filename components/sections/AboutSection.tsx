@@ -141,7 +141,7 @@ export const AboutSection = () => {
               {/* Stylised portrait placeholder — replace src with real photo */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={publicPath("/portrait.png")}
+                src={publicPath("/portrait.webp")}
                 alt="Zeinz"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
@@ -154,14 +154,14 @@ export const AboutSection = () => {
               <div className="absolute inset-0 z-20 flex items-end p-8 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
                 <div>
                   <p
-                    className="text-4xl font-bold text-zinc-900 dark:text-white mb-1"
+                    className="text-4xl font-bold text-white mb-1"
                     style={{ fontFamily: "'Playfair Display', serif" }}
                   >
                     More Than Just a Developer
                   </p>
-                  <p className="text-zinc-600 dark:text-zinc-400 text-sm">
-                    Exploring the intersection of .{" "}
-                    <code className="text-zinc-800 dark:text-zinc-300">
+                  <p className="text-zinc-300 text-sm">
+                    Exploring the intersection of{" "}
+                    <code className="text-zinc-200">
                       technology, business logic, and everyday life adventures
                     </code>
                   </p>
@@ -228,12 +228,12 @@ export const AboutSection = () => {
               {/* CTAs */}
               <div className="about-fade flex flex-wrap gap-4 mb-16 opacity-0">
                 <a
-                  href={publicPath("/cv.pdf")}
+                  href={publicPath(encodeURI("/RESUME_ALIF FAHRI ADITYA(english_language).pdf"))}
                   download
                   className="flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-full text-sm font-medium hover:bg-violet-700 transition-colors"
                 >
                   <Download size={14} />
-                  Download CV
+                  Download Resume
                 </a>
                 <button
                   onClick={() =>

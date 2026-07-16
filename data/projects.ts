@@ -21,7 +21,7 @@ export const PROJECTS: Project[] = [
     caseStudyUrl: '#',
     gradient: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
     accentColor: '#7c6ef5',
-    image: 'Frame 68.png',
+    image: 'Frame 68.webp',
   },
   {
     title: 'Hotel Asset Audit Mobile App',
@@ -33,7 +33,7 @@ export const PROJECTS: Project[] = [
     caseStudyUrl: '#',
     gradient: 'linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1c2128 100%)',
     accentColor: '#58a6ff',
-    image: 'Frame 69.png',
+    image: 'Frame 69.webp',
   },
   {
     title: 'Herbal Atsiri E-Commerce',
@@ -45,7 +45,7 @@ export const PROJECTS: Project[] = [
     caseStudyUrl: '#',
     gradient: 'linear-gradient(135deg, #0a1628 0%, #0d4a3a 50%, #1a5c3a 100%)',
     accentColor: '#3fb950',
-    image: "Frame 70.png",
+    image: "Frame 70.webp",
   },
   {
     title: 'Digital Safety Permit System',
@@ -57,7 +57,7 @@ export const PROJECTS: Project[] = [
     caseStudyUrl: '#',
     gradient: 'linear-gradient(135deg, #1a0a2e 0%, #2d1a4a 50%, #3d2060 100%)',
     accentColor: '#d2a8ff',
-    image:"Frame 72.png",
+    image:"Frame 72.webp",
   },
   {
     title: 'Company Profile CMS',
@@ -69,6 +69,6 @@ export const PROJECTS: Project[] = [
     caseStudyUrl: '#',
     gradient: 'linear-gradient(135deg, #1a0505 0%, #3d1010 50%, #5c1a1a 100%)',
     accentColor: '#f78166',
-    image:"Frame 71.png",
+    image:"Frame 71.webp",
   },
 ];

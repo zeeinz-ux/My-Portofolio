@@ -8,8 +8,7 @@ import {
   Linkedin,
   Instagram,
   ExternalLink,
-  ArrowUp,
-  Heart,
+  Send,
 } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
 import { publicPath } from "@/lib/paths";
@@ -48,7 +47,7 @@ const SOCIAL_LINKS = [
   { label: "GitHub", href: "https://github.com/zeeinz-ux", Icon: Github },
   {
     label: "Discord",
-    href: "zeeinz",
+    href: "https://discordapp.com/users/567495054701101076",
     Icon: DiscordIcon,
   },
   {
@@ -231,6 +230,126 @@ const GridOverlay = ({ isDark }: { isDark: boolean }) => (
   />
 );
 
+// ─── Contact Form ────────────────────────────────────────────
+
+const ContactForm = ({ isDark }: { isDark: boolean }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (!name.trim()) errs.name = "Name is required";
+    if (!email.trim()) errs.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      errs.email = "Invalid email";
+    if (!message.trim()) errs.message = "Message is required";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+    window.location.href = `mailto:aliffahriaditya10@gmail.com?subject=Portfolio Contact&body=${encodeURIComponent(body)}`;
+    setName("");
+    setEmail("");
+    setMessage("");
+  };
+
+  const inputBase = `w-full px-4 py-3 rounded-xl text-sm border backdrop-blur-sm transition-all duration-300 outline-none ${
+    isDark
+      ? "bg-white/[0.04] border-white/[0.10] text-white placeholder-white/30 focus:border-violet-500/50"
+      : "bg-zinc-900/[0.04] border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-violet-500/50"
+  }`;
+
+  const labelBase =
+    "text-[11px] font-medium tracking-wide mb-1.5 block " +
+    (isDark ? "text-white/50" : "text-zinc-500");
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="w-full max-w-md mx-auto mb-10 space-y-4"
+    >
+      <div>
+        <label htmlFor="contact-name" className={labelBase}>
+          Name
+        </label>
+        <input
+          id="contact-name"
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            setErrors((p) => ({ ...p, name: "" }));
+          }}
+          placeholder="Your name"
+          className={inputBase}
+          aria-invalid={!!errors.name}
+        />
+        {errors.name && (
+          <p className="text-[11px] text-red-400 mt-1">{errors.name}</p>
+        )}
+      </div>
+      <div>
+        <label htmlFor="contact-email" className={labelBase}>
+          Email
+        </label>
+        <input
+          id="contact-email"
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setErrors((p) => ({ ...p, email: "" }));
+          }}
+          placeholder="your@email.com"
+          className={inputBase}
+          aria-invalid={!!errors.email}
+        />
+        {errors.email && (
+          <p className="text-[11px] text-red-400 mt-1">{errors.email}</p>
+        )}
+      </div>
+      <div>
+        <label htmlFor="contact-message" className={labelBase}>
+          Message
+        </label>
+        <textarea
+          id="contact-message"
+          rows={3}
+          value={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            setErrors((p) => ({ ...p, message: "" }));
+          }}
+          placeholder="Your message..."
+          className={`${inputBase} resize-none`}
+          aria-invalid={!!errors.message}
+        />
+        {errors.message && (
+          <p className="text-[11px] text-red-400 mt-1">{errors.message}</p>
+        )}
+      </div>
+      <button
+        type="submit"
+        className={`w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-full border font-semibold backdrop-blur-md transition-all duration-300 text-[13px] tracking-wide ${
+          isDark
+            ? "bg-white/[0.08] border-white/[0.13] text-white hover:bg-white/[0.15] hover:border-white/[0.25]"
+            : "bg-zinc-900/[0.06] border-zinc-200 text-zinc-800 hover:bg-zinc-900/[0.10] hover:border-zinc-400"
+        }`}
+      >
+        <Send size={15} />
+        Send Message
+      </button>
+    </form>
+  );
+};
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export const CinematicFooter = () => {
@@ -378,7 +497,7 @@ export const CinematicFooter = () => {
         <div className="flex-1 flex flex-col items-center justify-center px-5 sm:px-8 py-14 md:py-20 pb-56 md:pb-64 relative z-10">
           {/* Eyebrow label */}
           <p
-            className={`text-[10px] font-semibold tracking-[0.28em] uppercase mb-7 text-violet-500`}
+            className="text-[10px] font-semibold tracking-[0.28em] uppercase mb-7 text-violet-500"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             Get in Touch
@@ -401,8 +520,11 @@ export const CinematicFooter = () => {
 
           {/* Divider */}
           <div
-            className={`w-10 h-px mb-14 transition-colors duration-500 ${divider}`}
+            className={`w-10 h-px mb-10 transition-colors duration-500 ${divider}`}
           />
+
+          {/* ── Contact Form ── */}
+          <ContactForm isDark={isDark} />
 
           {/* ── Primary magnetic buttons ── */}
           <div
@@ -456,7 +578,7 @@ export const CinematicFooter = () => {
         <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none select-none overflow-hidden z-0">
           <span
             ref={bgTextRef}
-            className={`font-black leading-none tracking-[-0.04em] whitespace-nowrap transition-colors duration-500 ${
+            className={`font-bold leading-none tracking-[-0.04em] whitespace-nowrap transition-colors duration-500 ${
               isDark ? "text-white/[0.03]" : "text-black/[0.03]"
             }`}
             style={{
@@ -488,7 +610,7 @@ export const CinematicFooter = () => {
                 className="object-contain"
               />
               <span
-                className="text-2xl font-black tracking-tighter"
+                className="text-2xl font-bold tracking-tighter"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 Zeinz

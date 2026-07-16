@@ -91,6 +91,45 @@ export const SkillsSection = () => {
     return () => ctx?.revert();
   }, []);
 
+  // RAF-driven marquee (proven working — bypasses CSS @keyframes issues)
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".marquee-track");
+    const cbs = new Map<HTMLElement, { rafId: number; paused: boolean; onEnter(): void; onLeave(): void }>();
+
+    els.forEach((el) => {
+      const speed = 32000;
+      const distance = 33.3333;
+      const start = performance.now();
+
+      const entry = { rafId: 0, paused: false, onEnter: () => {}, onLeave: () => {} };
+
+      entry.onEnter = () => { entry.paused = true; };
+      entry.onLeave = () => { entry.paused = false; };
+
+      const tick = (now: number) => {
+        if (!entry.paused) {
+          const pct = ((now - start) % speed) / speed * distance;
+          el.style.transform = `translateX(-${pct}%)`;
+        }
+        entry.rafId = requestAnimationFrame(tick);
+      };
+
+      entry.rafId = requestAnimationFrame(tick);
+      el.addEventListener("mouseenter", entry.onEnter);
+      el.addEventListener("mouseleave", entry.onLeave);
+      cbs.set(el, entry);
+    });
+
+    return () => {
+      cbs.forEach((entry, el) => {
+        cancelAnimationFrame(entry.rafId);
+        el.removeEventListener("mouseenter", entry.onEnter);
+        el.removeEventListener("mouseleave", entry.onLeave);
+      });
+      cbs.clear();
+    };
+  }, []);
+
   const textColor = isDark ? "text-white" : "text-zinc-900";
   const mutedColor = isDark ? "text-white/50" : "text-zinc-500";
   const borderColor = isDark ? "border-white/10" : "border-zinc-200";
@@ -184,11 +223,10 @@ export const SkillsSection = () => {
                   </h3>
                 </div>
 
-                {/* Skill Items (Compact & Optional Marquee) */}
-                <div className="sm:w-2/3 flex relative overflow-hidden pt-1 sm:pt-2">
-                  {category.skills.length >= 6 ? (
-                    // Marquee layout for many skills (using 3 copies for smooth calc(-100%/3) animation)
-                    <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+                {/* Skill Items — marquee if > 3, static otherwise */}
+                <div className="sm:w-2/3 flex relative overflow-hidden pt-1 sm:pt-2 group/marquee marquee-wrapper">
+                  {category.skills.length > 3 ? (
+                    <div className="flex w-max marquee-track">
                       {[...Array(3)].map((_, copyIdx) => (
                         <div key={copyIdx} className="flex gap-x-8 pr-8">
                           {category.skills.map((skill, j) => (
@@ -219,7 +257,6 @@ export const SkillsSection = () => {
                       ))}
                     </div>
                   ) : (
-                    // Standard flex layout for fewer skills
                     <div className="flex flex-wrap gap-x-8 gap-y-4">
                       {category.skills.map((skill, j) => (
                         <div
