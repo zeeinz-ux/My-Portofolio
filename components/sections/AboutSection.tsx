@@ -1,15 +1,9 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import {
-  Download,
-  ArrowRight,
-  MapPin,
-  GraduationCap,
-  Code2,
-  Zap,
-} from "lucide-react";
+import { Download, ArrowRight, MapPin, GraduationCap, Code2, Zap } from "lucide-react";
 import { publicPath } from "@/lib/paths";
+import { cn } from "@/lib/utils";
 
 const INFO_ITEMS = [
   { Icon: MapPin, label: "Location", value: "Indonesia" },
@@ -127,7 +121,12 @@ export const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="min-h-screen py-28 md:py-36 px-6 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white transition-colors duration-500"
+      className={cn(
+        "min-h-screen py-28 md:py-36 px-6",
+        "bg-white dark:bg-zinc-950",
+        "text-zinc-900 dark:text-white",
+        "transition-colors duration-500",
+      )}
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-start">
@@ -135,7 +134,11 @@ export const AboutSection = () => {
           <div className="lg:sticky lg:top-28">
             <div
               ref={imageWrapRef}
-              className="relative aspect-[4/3] sm:aspect-[4/4] lg:aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-200 dark:bg-zinc-900"
+              className={cn(
+                "relative aspect-[4/3] sm:aspect-[4/4] lg:aspect-[4/5]",
+                "overflow-hidden rounded-2xl",
+                "bg-zinc-200 dark:bg-zinc-900",
+              )}
               style={{ clipPath: "inset(100% 0% 0% 0%)" }}
             >
               {/* Stylised portrait placeholder — replace src with real photo */}
@@ -147,7 +150,10 @@ export const AboutSection = () => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}
                 loading="lazy"
-                className="absolute inset-0 z-10 w-full h-full object-cover dark:grayscale transition-all duration-700"
+                className={cn(
+                  "absolute inset-0 z-10 w-full h-full object-cover",
+                  "dark:grayscale transition-all duration-700",
+                )}
               />
 
               {/* Text overlay on top of photo */}
@@ -194,7 +200,12 @@ export const AboutSection = () => {
             </h2>
 
             <div className="about-bio-block">
-              <p className="about-fade text-base lg:text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed mb-10 opacity-0">
+              <p className={cn(
+                "about-fade",
+                "text-base lg:text-lg leading-relaxed mb-10",
+                "text-zinc-700 dark:text-zinc-300",
+                "opacity-0",
+              )}>
                 I&apos;m zeeinz an Information Systems student and full-stack
                 developer from Indonesia passionate about building clean,
                 performant, and visually compelling digital products. I
@@ -207,7 +218,12 @@ export const AboutSection = () => {
                 {INFO_ITEMS.map(({ Icon, label, value }) => (
                   <div
                     key={label}
-                    className="flex items-start gap-3 p-4 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 transition-colors duration-500"
+                    className={cn(
+                      "flex items-start gap-3 p-4 rounded-xl",
+                      "bg-zinc-100 dark:bg-white/5",
+                      "border border-zinc-200 dark:border-white/10",
+                      "transition-colors duration-500",
+                    )}
                   >
                     <Icon
                       size={15}
@@ -241,7 +257,13 @@ export const AboutSection = () => {
                       .getElementById("projects")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="flex items-center gap-2 px-6 py-3 border border-zinc-300 dark:border-white/20 text-zinc-900 dark:text-white rounded-full text-sm font-medium hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                  className={cn(
+                    "flex items-center gap-2 px-6 py-3 rounded-full",
+                    "border border-zinc-300 dark:border-white/20",
+                    "text-zinc-900 dark:text-white text-sm font-medium",
+                    "hover:bg-zinc-100 dark:hover:bg-white/10",
+                    "transition-colors",
+                  )}
                 >
                   View Projects
                   <ArrowRight size={14} />

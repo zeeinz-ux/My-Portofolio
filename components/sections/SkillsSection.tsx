@@ -3,10 +3,12 @@
 import { useRef, useEffect } from "react";
 import { SKILLS } from "@/data/skills";
 import { useTheme } from "@/providers/ThemeProvider";
+import { cn } from "@/lib/utils";
 
 export const SkillsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const marqueeRefs = useRef<HTMLDivElement[]>([]);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -91,14 +93,16 @@ export const SkillsSection = () => {
     return () => ctx?.revert();
   }, []);
 
-  // RAF-driven marquee (proven working — bypasses CSS @keyframes issues)
+  // RAF-driven marquee — ref-based, no querySelectorAll
   useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>(".marquee-track");
-    const cbs = new Map<HTMLElement, { rafId: number; paused: boolean; onEnter(): void; onLeave(): void }>();
+    const els = marqueeRefs.current.filter(Boolean) as HTMLDivElement[];
+    if (els.length === 0) return;
+
+    const cbs = new Map<HTMLDivElement, { rafId: number; paused: boolean; onEnter(): void; onLeave(): void }>();
 
     els.forEach((el) => {
       const speed = 32000;
-      const distance = 33.3333;
+      const distance = 50;
       const start = performance.now();
 
       const entry = { rafId: 0, paused: false, onEnter: () => {}, onLeave: () => {} };
@@ -130,17 +134,15 @@ export const SkillsSection = () => {
     };
   }, []);
 
-  const textColor = isDark ? "text-white" : "text-zinc-900";
-  const mutedColor = isDark ? "text-white/50" : "text-zinc-500";
-  const borderColor = isDark ? "border-white/10" : "border-zinc-200";
-
   return (
     <section
       id="skills"
       ref={sectionRef}
-      className={`relative py-20 md:py-32 px-5 sm:px-6 transition-colors duration-500 ${
-        isDark ? "bg-zinc-950" : "bg-white"
-      }`}
+      className={cn(
+        "relative py-20 md:py-32 px-5 sm:px-6",
+        "transition-colors duration-500",
+        isDark ? "bg-zinc-950" : "bg-white",
+      )}
     >
       <div ref={containerRef} className="max-w-7xl mx-auto">
         {/* Mobile Header (visible only on mobile) */}
@@ -152,7 +154,10 @@ export const SkillsSection = () => {
             Capabilities
           </p>
           <h2
-            className={`text-4xl sm:text-5xl font-bold leading-[1.1] tracking-tight ${textColor}`}
+            className={cn(
+              "text-4xl sm:text-5xl font-bold leading-[1.1] tracking-tight",
+              isDark ? "text-white" : "text-zinc-900",
+            )}
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Tools of
@@ -160,7 +165,10 @@ export const SkillsSection = () => {
             the Trade.
           </h2>
           <p
-            className={`mt-5 text-sm leading-relaxed ${mutedColor}`}
+            className={cn(
+              "mt-5 text-sm leading-relaxed",
+              isDark ? "text-white/50" : "text-zinc-500",
+            )}
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             A versatile and evolving stack of technologies I use to build
@@ -179,7 +187,10 @@ export const SkillsSection = () => {
                 Capabilities
               </p>
               <h2
-                className={`text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight ${textColor}`}
+                className={cn(
+                  "text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight",
+                  isDark ? "text-white" : "text-zinc-900",
+                )}
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 Tools of
@@ -187,7 +198,10 @@ export const SkillsSection = () => {
                 the Trade.
               </h2>
               <p
-                className={`mt-8 text-sm leading-relaxed max-w-sm ${mutedColor}`}
+                className={cn(
+                  "mt-8 text-sm leading-relaxed max-w-sm",
+                  isDark ? "text-white/50" : "text-zinc-500",
+                )}
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 A versatile and evolving stack of technologies I use to build
@@ -205,19 +219,31 @@ export const SkillsSection = () => {
               >
                 {/* Divider Line */}
                 <div
-                  className={`skill-line absolute top-0 left-0 w-full h-px ${isDark ? "bg-white/10" : "bg-zinc-200"}`}
+                  className={cn(
+                    "skill-line absolute top-0 left-0 w-full h-px",
+                    isDark ? "bg-white/10" : "bg-zinc-200",
+                  )}
                 />
 
                 {/* Category Info */}
                 <div className="sm:w-1/3 flex flex-row sm:flex-col items-center sm:items-start gap-4 sm:gap-0">
                   <span
-                    className={`skill-num text-4xl sm:text-5xl md:text-6xl font-light mb-0 sm:mb-2 transition-colors duration-300 group-hover:text-violet-500 ${textColor}`}
+                    className={cn(
+                      "skill-num",
+                      "text-4xl sm:text-5xl md:text-6xl font-light",
+                      "mb-0 sm:mb-2",
+                      "transition-colors duration-300 group-hover:text-violet-500",
+                      isDark ? "text-white" : "text-zinc-900",
+                    )}
                     style={{ fontFamily: "'Inter', sans-serif" }}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h3
-                    className={`skill-title text-lg sm:text-xl font-bold tracking-tight ${textColor}`}
+                    className={cn(
+                      "skill-title text-lg sm:text-xl font-bold tracking-tight",
+                      isDark ? "text-white" : "text-zinc-900",
+                    )}
                   >
                     {category.name}
                   </h3>
@@ -226,8 +252,15 @@ export const SkillsSection = () => {
                 {/* Skill Items — marquee if > 3, static otherwise */}
                 <div className="sm:w-2/3 flex relative overflow-hidden pt-1 sm:pt-2 group/marquee marquee-wrapper">
                   {category.skills.length > 3 ? (
-                    <div className="flex w-max marquee-track">
-                      {[...Array(3)].map((_, copyIdx) => (
+                    <div
+                      ref={(el) => {
+                        if (el && !marqueeRefs.current.includes(el)) {
+                          marqueeRefs.current.push(el);
+                        }
+                      }}
+                      className="flex w-max marquee-track"
+                    >
+                      {[...Array(2)].map((_, copyIdx) => (
                         <div key={copyIdx} className="flex gap-x-8 pr-8">
                           {category.skills.map((skill, j) => (
                             <div
@@ -243,7 +276,12 @@ export const SkillsSection = () => {
                                 }
                                 alt={skill.name}
                                 loading="lazy"
-                                className={`w-5 h-5 opacity-50 group-hover/skill:opacity-100 transition-opacity duration-300 ${skill.icon === "vscode" && !isDark ? "grayscale" : ""}`}
+                                className={cn(
+                                  "w-5 h-5",
+                                  "opacity-50 group-hover/skill:opacity-100",
+                                  "transition-opacity duration-300",
+                                  skill.icon === "vscode" && !isDark && "grayscale",
+                                )}
                               />
                               <span
                                 className="text-base font-medium text-zinc-500 group-hover/skill:text-zinc-900 dark:text-zinc-400 dark:group-hover/skill:text-white transition-colors duration-300"
@@ -272,10 +310,15 @@ export const SkillsSection = () => {
                             }
                             alt={skill.name}
                             loading="lazy"
-                            className={`w-5 h-5 opacity-50 group-hover/skill:opacity-100 transition-opacity duration-300 ${skill.icon === "vscode" && !isDark ? "grayscale" : ""}`}
-                          />
-                          <span
-                            className="text-base font-medium text-zinc-500 group-hover/skill:text-zinc-900 dark:text-zinc-400 dark:group-hover/skill:text-white transition-colors duration-300"
+                            className={cn(
+                              "w-5 h-5",
+                              "opacity-50 group-hover/skill:opacity-100",
+                              "transition-opacity duration-300",
+                              skill.icon === "vscode" && !isDark && "grayscale",
+                            )}
+                              />
+                              <span
+                                className="text-base font-medium text-zinc-500 group-hover/skill:text-zinc-900 dark:text-zinc-400 dark:group-hover/skill:text-white transition-colors duration-300"
                             style={{ fontFamily: "'Inter', sans-serif" }}
                           >
                             {skill.name}

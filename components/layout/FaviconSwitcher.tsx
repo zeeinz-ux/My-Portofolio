@@ -1,23 +1,27 @@
 "use client";
 
-import { useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useTheme } from "@/providers/ThemeProvider";
 import { publicPath } from "@/lib/paths";
 
 export const FaviconSwitcher = () => {
   const { theme } = useTheme();
+  const linkRef = useRef<HTMLLinkElement | null>(null);
 
   useEffect(() => {
-    const logo = publicPath(theme === "dark" ? "/logo white.png" : "/logo black.png");
-    
-    let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
+    if (!linkRef.current) {
+      linkRef.current =
+        document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+      if (!linkRef.current) {
+        linkRef.current = document.createElement("link");
+        linkRef.current.rel = "icon";
+        document.head.appendChild(linkRef.current);
+      }
     }
-    link.href = logo;
+    linkRef.current.href = publicPath(
+      theme === "dark" ? "/logo white.png" : "/logo black.png"
+    );
   }, [theme]);
 
-  return null; // renders nothing
+  return null;
 };

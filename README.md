@@ -16,7 +16,7 @@ Welcome to the repository of my personal portfolio website! This project is a mo
 
 This project is built using the latest web technologies:
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://gsap.com/)

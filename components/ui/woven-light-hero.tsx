@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import * as THREE from "three";
 import { useTheme } from "@/providers/ThemeProvider";
+import { cn } from "@/lib/utils";
 
 interface WovenLightHeroProps {
   onExplore?: () => void;
@@ -36,9 +37,11 @@ export const WovenLightHero = ({ onExplore }: WovenLightHeroProps) => {
 
   return (
     <div
-      className={`relative flex h-screen w-full flex-col items-center justify-center overflow-hidden transition-colors duration-700 ${
-        isDark ? "bg-zinc-950" : "bg-white"
-      }`}
+      className={cn(
+        "relative flex h-screen w-full flex-col items-center justify-center overflow-hidden",
+        "transition-colors duration-700",
+        isDark ? "bg-zinc-950" : "bg-white",
+      )}
     >
       {/* ── Three.js canvas ── */}
       <WovenCanvas />
@@ -67,9 +70,10 @@ export const WovenLightHero = ({ onExplore }: WovenLightHeroProps) => {
       {/* ── Text content ── */}
       <div className="relative z-10 text-center px-5 sm:px-8">
         <h1
-          className={`text-5xl sm:text-6xl md:text-8xl font-bold leading-[1.1] ${
-            isDark ? "text-white" : "text-zinc-900"
-          }`}
+          className={cn(
+            "text-5xl sm:text-6xl md:text-8xl font-bold leading-[1.1]",
+            isDark ? "text-white" : "text-zinc-900",
+          )}
           style={{
             fontFamily: "'Playfair Display', serif",
             textShadow: isDark
@@ -103,9 +107,11 @@ export const WovenLightHero = ({ onExplore }: WovenLightHeroProps) => {
           custom={10}
           initial={{ opacity: 0, y: 30 }}
           animate={textControls}
-          className={`mx-auto mt-4 md:mt-6 max-w-[90vw] md:max-w-xl text-base md:text-lg leading-relaxed ${
-            isDark ? "text-zinc-300" : "text-zinc-700"
-          }`}
+          className={cn(
+            "mx-auto mt-4 md:mt-6 max-w-[90vw] md:max-w-xl",
+            "text-base md:text-lg leading-relaxed",
+            isDark ? "text-zinc-300" : "text-zinc-700",
+          )}
           style={{ fontFamily: "'Inter', sans-serif" }}
         >
           Building scalable, high-performance web and mobile applications with clean code and creative design.
@@ -132,6 +138,9 @@ export const WovenLightHero = ({ onExplore }: WovenLightHeroProps) => {
 // --- Three.js Canvas Component ---
 const WovenCanvas = () => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -294,6 +303,9 @@ const WovenCanvas = () => {
     };
     animate();
 
+    // Signal ready after first frame — hide loading overlay
+    requestAnimationFrame(() => setReady(true));
+
     // --- Resize ---
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -318,5 +330,17 @@ const WovenCanvas = () => {
     };
   }, []);
 
-  return <div ref={mountRef} className="absolute inset-0 z-0" />;
+  return (
+    <>
+      <div ref={mountRef} className="absolute inset-0 z-0" />
+      <div
+        className={cn(
+          "absolute inset-0 z-[1]",
+          "transition-opacity duration-700",
+          isDark ? "bg-zinc-950" : "bg-white",
+        )}
+        style={{ opacity: ready ? 0 : 1, pointerEvents: ready ? "none" : "auto" }}
+      />
+    </>
+  );
 };

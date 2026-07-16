@@ -18,14 +18,19 @@ export const LoadingScreen = () => {
       return;
     }
 
-    let current = 0;
-    const interval = setInterval(() => {
-      const increment = Math.random() * 18 + 5;
-      current = Math.min(current + increment, 100);
-      setProgress(current);
+    let rafId: number;
+    const startTime = performance.now();
+    const duration = 1800;
 
-      if (current >= 100) {
-        clearInterval(interval);
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      // ease-out cubic: decelerates toward 100
+      const eased = 1 - Math.pow(1 - t, 3);
+      setProgress(eased * 100);
+      if (t < 1) {
+        rafId = requestAnimationFrame(tick);
+      } else {
         setTimeout(() => {
           setExiting(true);
           setTimeout(() => {
@@ -34,9 +39,10 @@ export const LoadingScreen = () => {
           }, 900);
         }, 400);
       }
-    }, 80);
+    };
+    rafId = requestAnimationFrame(tick);
 
-    return () => clearInterval(interval);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   if (!visible) return null;

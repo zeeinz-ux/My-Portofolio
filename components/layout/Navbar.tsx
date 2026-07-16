@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
 import { publicPath } from "@/lib/paths";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { label: "Home", id: "home" },
@@ -23,7 +24,7 @@ export const Navbar = () => {
   const isDark = theme === "dark";
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
+    const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -62,24 +63,6 @@ export const Navbar = () => {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // ── Derived styles — purely theme-driven ──
-  // Since the hero now matches the theme, text color is consistent throughout the page.
-
-  const textColor = isDark ? "text-white" : "text-zinc-900";
-  const mutedColor = isDark ? "text-white/45" : "text-zinc-500";
-  const hoverColor = isDark ? "hover:text-white" : "hover:text-zinc-900";
-
-  const toggleStyle = isDark
-    ? "border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
-    : "border-zinc-300 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900";
-
-  const mobileBg = isDark
-    ? "bg-zinc-950"
-    : "bg-white";
-
-  const mobileLinkColor = isDark ? "text-white" : "text-zinc-900";
-  const mobileHoverColor = isDark ? "hover:text-white/60" : "hover:text-zinc-400";
-
   return (
     <>
       <motion.nav
@@ -90,21 +73,30 @@ export const Navbar = () => {
       >
         <motion.div
           layout
-          transition={{ layout: { type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.8, delay: 0.1 } }}
-          className={`pointer-events-auto flex items-center justify-between border transition-colors duration-500 ${
+          transition={{ layout: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
+          className={cn(
+            "pointer-events-auto flex items-center justify-between border",
+            "transition-all duration-500",
             scrolled
-              ? `mt-4 rounded-full px-6 py-3 shadow-2xl w-[92%] md:w-auto md:gap-12 ${
-                  isDark
-                    ? "bg-zinc-950/80 backdrop-blur-md border-white/[0.12]"
-                    : "bg-white/80 backdrop-blur-md border-black/[0.08]"
-                }`
-              : "w-full max-w-7xl px-6 py-5 rounded-none border-transparent bg-transparent mt-0 md:w-full"
-          }`}
+              ? cn(
+                  "mt-4 rounded-full px-6 py-3 shadow-2xl w-[92%] md:w-auto md:gap-12",
+                  isDark ? "bg-zinc-950/80 border-white/[0.12]" : "bg-white/80 border-black/[0.08]",
+                )
+              : "w-full max-w-7xl px-6 py-5 rounded-none border-transparent bg-transparent mt-0 md:w-full",
+          )}
+          style={{
+            backdropFilter: scrolled ? "blur(12px)" : "blur(0px)",
+            WebkitBackdropFilter: scrolled ? "blur(12px)" : "blur(0px)",
+            transition: "backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease",
+          }}
         >
           {/* Logo */}
           <button
             onClick={() => scrollTo("home")}
-            className={`flex items-center gap-2.5 transition-opacity hover:opacity-70 ${textColor}`}
+            className={cn(
+              "flex items-center gap-2.5 transition-opacity hover:opacity-70",
+              isDark ? "text-white" : "text-zinc-900",
+            )}
           >
             <img
               src={publicPath(isDark ? "/logo white.png" : "/logo black.png")}
@@ -128,11 +120,19 @@ export const Navbar = () => {
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={(e) => { e.preventDefault(); scrollTo(link.id); }}
-                className={`text-sm font-medium tracking-wide transition-all duration-200 ${
+                className={cn(
+                  "text-sm font-medium tracking-wide transition-all duration-200",
                   activeSection === link.id
-                    ? `${textColor} opacity-100`
-                    : `${mutedColor} ${hoverColor} hover:opacity-100`
-                }`}
+                    ? cn(
+                        isDark ? "text-white" : "text-zinc-900",
+                        "opacity-100",
+                      )
+                    : cn(
+                        isDark ? "text-white/45" : "text-zinc-500",
+                        isDark ? "hover:text-white" : "hover:text-zinc-900",
+                        "hover:opacity-100",
+                      ),
+                )}
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 {link.label}
@@ -145,7 +145,12 @@ export const Navbar = () => {
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className={`p-2 rounded-full border transition-all duration-300 ${toggleStyle}`}
+              className={cn(
+                "p-2 rounded-full border transition-all duration-300",
+                isDark
+                  ? "border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
+                  : "border-zinc-300 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900",
+              )}
             >
               <motion.div
                 key={theme}
@@ -162,7 +167,10 @@ export const Navbar = () => {
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className={`md:hidden p-2 transition-colors ${textColor}`}
+              className={cn(
+                "md:hidden p-2 transition-colors",
+                isDark ? "text-white" : "text-zinc-900",
+              )}
             >
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -182,7 +190,11 @@ export const Navbar = () => {
             animate={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
             exit={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
             transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-            className={`fixed inset-0 z-40 ${mobileBg} flex flex-col items-center justify-center gap-10`}
+            className={cn(
+              "fixed inset-0 z-40",
+              "flex flex-col items-center justify-center gap-10",
+              isDark ? "bg-zinc-950" : "bg-white",
+            )}
           >
             {NAV_LINKS.map((link, i) => (
               <motion.a
@@ -192,7 +204,10 @@ export const Navbar = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.07, duration: 0.5 }}
-                className={`text-5xl font-bold ${mobileLinkColor} ${mobileHoverColor} transition-colors`}
+                className={cn(
+                  "text-5xl font-bold transition-colors",
+                  isDark ? "text-white hover:text-white/60" : "text-zinc-900 hover:text-zinc-400",
+                )}
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 {link.label}
@@ -204,7 +219,10 @@ export const Navbar = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
               onClick={toggleTheme}
-              className={`mt-4 flex items-center gap-2 text-sm ${isDark ? "text-white/40" : "text-zinc-400"}`}
+              className={cn(
+                "mt-4 flex items-center gap-2 text-sm",
+                isDark ? "text-white/40" : "text-zinc-400",
+              )}
             >
               {isDark ? <Sun size={14} /> : <Moon size={14} />}
               <span style={{ fontFamily: "'Inter', sans-serif" }}>

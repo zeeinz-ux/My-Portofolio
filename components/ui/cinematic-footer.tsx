@@ -1,17 +1,11 @@
 "use client";
 
 import { useRef, useEffect, useCallback, useState } from "react";
-import {
-  Mail,
-  MessageCircle,
-  Github,
-  Linkedin,
-  Instagram,
-  ExternalLink,
-  Send,
-} from "lucide-react";
+import { Mail, MessageCircle, Send, Github, Linkedin, Instagram } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
 import { publicPath } from "@/lib/paths";
+import { SOCIAL_LINKS } from "@/data/social";
+import { cn } from "@/lib/utils";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -43,25 +37,15 @@ const MARQUEE_ITEMS = [
   "Contact Me Anytime",
 ];
 
-const SOCIAL_LINKS = [
-  { label: "GitHub", href: "https://github.com/zeeinz-ux", Icon: Github },
-  {
-    label: "Discord",
-    href: "https://discordapp.com/users/567495054701101076",
-    Icon: DiscordIcon,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/aliffahriaditya",
-    Icon: Linkedin,
-  },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/zeeeinz?igsh=MThpYzRrb3p6bGd1Nw==",
-    Icon: Instagram,
-  },
-  { label: "Portfolio", href: "#home", Icon: ExternalLink },
-];
+// ─── Icon Map ──────────────────────────────────────────────────────────────────
+
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number | string; strokeWidth?: number; className?: string }>> = {
+  github: Github,
+  linkedin: Linkedin,
+  instagram: Instagram,
+  discord: DiscordIcon,
+};
+
 
 // ─── Cycling Word ────────────────────────────────────────────────────────────
 
@@ -96,9 +80,11 @@ const CyclingWord = ({ colorClass }: { colorClass: string }) => {
 
   return (
     <span
-      className={`inline-block transition-all duration-300 ${
-        flashing ? "text-violet-400" : colorClass
-      }`}
+      className={cn(
+        "inline-block",
+        "transition-all duration-300",
+        flashing ? "text-violet-400" : colorClass,
+      )}
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(12px)",
@@ -160,22 +146,28 @@ const MarqueeRow = ({ isDark }: { isDark: boolean }) => {
   const tripled = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
   return (
     <div
-      className={`overflow-hidden border-b transition-colors duration-500 ${
-        isDark ? "border-white/[0.05]" : "border-zinc-200"
-      }`}
+      className={cn(
+        "overflow-hidden border-b",
+        "transition-colors duration-500",
+        isDark ? "border-white/[0.05]" : "border-zinc-200",
+      )}
     >
       <div className="flex w-max animate-marquee py-3.5">
         {tripled.map((item, i) => (
           <span
             key={i}
-            className={`flex items-center gap-3.5 pr-12 text-[12px] font-medium tracking-[0.08em] uppercase whitespace-nowrap transition-colors duration-500 ${
-              isDark ? "text-white/20" : "text-zinc-400"
-            }`}
+            className={cn(
+              "flex items-center gap-3.5 pr-12",
+              "text-[12px] font-medium tracking-[0.08em] uppercase whitespace-nowrap",
+              "transition-colors duration-500",
+              isDark ? "text-white/20" : "text-zinc-400",
+            )}
           >
             <span
-              className={`w-[3px] h-[3px] rounded-full flex-shrink-0 ${
-                isDark ? "bg-white/20" : "bg-zinc-300"
-              }`}
+              className={cn(
+                "w-[3px] h-[3px] rounded-full flex-shrink-0",
+                isDark ? "bg-white/20" : "bg-zinc-300",
+              )}
             />
             {item}
           </span>
@@ -259,15 +251,19 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
     setMessage("");
   };
 
-  const inputBase = `w-full px-4 py-3 rounded-xl text-sm border backdrop-blur-sm transition-all duration-300 outline-none ${
+  const inputBase = cn(
+    "w-full px-4 py-3 rounded-xl",
+    "text-sm border",
+    "backdrop-blur-sm transition-all duration-300 outline-none",
     isDark
       ? "bg-white/[0.04] border-white/[0.10] text-white placeholder-white/30 focus:border-violet-500/50"
-      : "bg-zinc-900/[0.04] border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-violet-500/50"
-  }`;
+      : "bg-zinc-900/[0.04] border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-violet-500/50",
+  );
 
-  const labelBase =
-    "text-[11px] font-medium tracking-wide mb-1.5 block " +
-    (isDark ? "text-white/50" : "text-zinc-500");
+  const labelBase = cn(
+    "text-[11px] font-medium tracking-wide mb-1.5 block",
+    isDark ? "text-white/50" : "text-zinc-500",
+  );
 
   return (
     <form
@@ -328,7 +324,7 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
             setErrors((p) => ({ ...p, message: "" }));
           }}
           placeholder="Your message..."
-          className={`${inputBase} resize-none`}
+          className={cn(inputBase, "resize-none")}
           aria-invalid={!!errors.message}
         />
         {errors.message && (
@@ -337,11 +333,15 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
       </div>
       <button
         type="submit"
-        className={`w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-full border font-semibold backdrop-blur-md transition-all duration-300 text-[13px] tracking-wide ${
+        className={cn(
+          "w-full flex items-center justify-center gap-2",
+          "px-8 py-3.5 rounded-full border",
+          "font-semibold backdrop-blur-md",
+          "transition-all duration-300 text-[13px] tracking-wide",
           isDark
             ? "bg-white/[0.08] border-white/[0.13] text-white hover:bg-white/[0.15] hover:border-white/[0.25]"
-            : "bg-zinc-900/[0.06] border-zinc-200 text-zinc-800 hover:bg-zinc-900/[0.10] hover:border-zinc-400"
-        }`}
+            : "bg-zinc-900/[0.06] border-zinc-200 text-zinc-800 hover:bg-zinc-900/[0.10] hover:border-zinc-400",
+        )}
       >
         <Send size={15} />
         Send Message
@@ -441,49 +441,33 @@ export const CinematicFooter = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // ── Derived styles ──
-  const surface = isDark ? "bg-zinc-950" : "bg-white";
-  const heading1 = isDark ? "text-white" : "text-zinc-900";
-  const heading2 = isDark ? "text-white/35" : "text-zinc-400";
-  const eyebrow = isDark ? "text-white/25" : "text-zinc-400";
-  const divider = isDark ? "bg-white/15" : "bg-zinc-200";
-
-  // Glass pill button (primary)
-  const primaryBtn = isDark
-    ? "bg-white/[0.08] border-white/[0.13] text-white hover:bg-white/[0.15] hover:border-white/[0.25]"
-    : "bg-zinc-900/[0.06] border-zinc-200 text-zinc-800 hover:bg-zinc-900/[0.10] hover:border-zinc-400";
-  const primaryIcon = isDark
-    ? "text-white/55 group-hover:text-white"
-    : "text-zinc-500 group-hover:text-zinc-900";
-
-  // Glass pill (social)
-  const socialPill = isDark
-    ? "bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white hover:bg-white/[0.09] hover:border-white/[0.18]"
-    : "bg-zinc-900/[0.04] border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-900/[0.08] hover:border-zinc-400";
-
-  const bottomBorder = isDark ? "border-white/[0.06]" : "border-zinc-200";
-  const bottomText = isDark ? "text-white/25" : "text-zinc-400";
-
-  // Giant bg text stroke
-  const bgTextStroke = isDark
-    ? "1px rgba(255,255,255,0.045)"
-    : "1px rgba(0,0,0,0.06)";
-
   return (
     <section
       id="contact"
       ref={outerRef}
-      className={`relative min-h-screen transition-colors duration-500 ${surface}`}
+      className={cn(
+        "relative min-h-screen",
+        "transition-colors duration-500",
+        isDark ? "bg-zinc-950" : "bg-white",
+      )}
     >
       {/* Permanent backdrop — visible before curtain reveals */}
       <div
-        className={`absolute inset-0 transition-colors duration-500 ${surface}`}
+        className={cn(
+          "absolute inset-0",
+          "transition-colors duration-500",
+          isDark ? "bg-zinc-950" : "bg-white",
+        )}
       />
 
       {/* ── Curtain-revealed layer ── */}
       <div
         ref={revealRef}
-        className={`relative min-h-screen flex flex-col overflow-hidden transition-colors duration-500 ${surface}`}
+        className={cn(
+          "relative min-h-screen flex flex-col overflow-hidden",
+          "transition-colors duration-500",
+          isDark ? "bg-zinc-950" : "bg-white",
+        )}
         style={{ clipPath: "inset(100% 0% 0% 0%)" }}
       >
         {/* Background layers */}
@@ -497,7 +481,10 @@ export const CinematicFooter = () => {
         <div className="flex-1 flex flex-col items-center justify-center px-5 sm:px-8 py-14 md:py-20 pb-56 md:pb-64 relative z-10">
           {/* Eyebrow label */}
           <p
-            className="text-[10px] font-semibold tracking-[0.28em] uppercase mb-7 text-violet-500"
+            className={cn(
+              "text-[10px] font-semibold tracking-[0.28em] uppercase mb-7",
+              "text-violet-500",
+            )}
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             Get in Touch
@@ -506,21 +493,34 @@ export const CinematicFooter = () => {
           {/* ── Heading ── */}
           <h2
             ref={headingRef}
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-bold text-center leading-[1.0] mb-4"
+            className={cn(
+              "text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem]",
+              "font-bold text-center leading-[1.0] mb-4",
+            )}
             style={{ fontFamily: "'Playfair Display', serif", opacity: 0 }}
           >
-            <span className={`transition-colors duration-500 ${heading1}`}>
+            <span className={cn(
+              "transition-colors duration-500",
+              isDark ? "text-white" : "text-zinc-900",
+            )}>
               Let&apos;s Work
             </span>
             <br />
             <CyclingWord
-              colorClass={`transition-colors duration-500 ${heading2}`}
+              colorClass={cn(
+                "transition-colors duration-500",
+                isDark ? "text-white/35" : "text-zinc-400",
+              )}
             />
           </h2>
 
           {/* Divider */}
           <div
-            className={`w-10 h-px mb-10 transition-colors duration-500 ${divider}`}
+            className={cn(
+              "w-10 h-px mb-10",
+              "transition-colors duration-500",
+              isDark ? "bg-white/15" : "bg-zinc-200",
+            )}
           />
 
           {/* ── Contact Form ── */}
@@ -536,11 +536,24 @@ export const CinematicFooter = () => {
             <MagneticWrapper>
               <a
                 href="mailto:aliffahriaditya10@gmail.com"
-                className={`group flex items-center gap-3 px-8 py-4 rounded-full border font-semibold backdrop-blur-md transition-all duration-300 text-[13px] tracking-wide ${primaryBtn}`}
+                className={cn(
+                  "group flex items-center gap-3",
+                  "px-8 py-4 rounded-full border",
+                  "font-semibold backdrop-blur-md",
+                  "transition-all duration-300 text-[13px] tracking-wide",
+                  isDark
+                    ? "bg-white/[0.08] border-white/[0.13] text-white hover:bg-white/[0.15] hover:border-white/[0.25]"
+                    : "bg-zinc-900/[0.06] border-zinc-200 text-zinc-800 hover:bg-zinc-900/[0.10] hover:border-zinc-400",
+                )}
               >
                 <Mail
                   size={15}
-                  className={`transition-colors duration-200 ${primaryIcon}`}
+                  className={cn(
+                    "transition-colors duration-200",
+                    isDark
+                      ? "text-white/55 group-hover:text-white"
+                      : "text-zinc-500 group-hover:text-zinc-900",
+                  )}
                 />
                 Send Email
               </a>
@@ -552,11 +565,24 @@ export const CinematicFooter = () => {
                 href="https://wa.me/6285285944423"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group flex items-center gap-3 px-8 py-4 rounded-full border font-semibold backdrop-blur-md transition-all duration-300 text-[13px] tracking-wide ${primaryBtn}`}
+                className={cn(
+                  "group flex items-center gap-3",
+                  "px-8 py-4 rounded-full border",
+                  "font-semibold backdrop-blur-md",
+                  "transition-all duration-300 text-[13px] tracking-wide",
+                  isDark
+                    ? "bg-white/[0.08] border-white/[0.13] text-white hover:bg-white/[0.15] hover:border-white/[0.25]"
+                    : "bg-zinc-900/[0.06] border-zinc-200 text-zinc-800 hover:bg-zinc-900/[0.10] hover:border-zinc-400",
+                )}
               >
                 <MessageCircle
                   size={15}
-                  className={`transition-colors duration-200 ${primaryIcon}`}
+                  className={cn(
+                    "transition-colors duration-200",
+                    isDark
+                      ? "text-white/55 group-hover:text-white"
+                      : "text-zinc-500 group-hover:text-zinc-900",
+                  )}
                 />
                 WhatsApp Me
               </a>
@@ -578,9 +604,11 @@ export const CinematicFooter = () => {
         <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none select-none overflow-hidden z-0">
           <span
             ref={bgTextRef}
-            className={`font-bold leading-none tracking-[-0.04em] whitespace-nowrap transition-colors duration-500 ${
-              isDark ? "text-white/[0.03]" : "text-black/[0.03]"
-            }`}
+            className={cn(
+              "font-bold leading-none tracking-[-0.04em] whitespace-nowrap",
+              "transition-colors duration-500",
+              isDark ? "text-white/[0.03]" : "text-black/[0.03]",
+            )}
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "clamp(120px, 24vw, 400px)",
@@ -593,14 +621,23 @@ export const CinematicFooter = () => {
         {/* ── Bottom Layout ── */}
         <div
           ref={bottomRef}
-          className="absolute bottom-0 left-0 right-0 z-10 w-full max-w-7xl mx-auto px-5 sm:px-10 pb-8 md:pb-10 pt-0 flex flex-col md:flex-row justify-between items-start gap-6 md:gap-10"
+          className={cn(
+            "absolute bottom-0 left-0 right-0 z-10",
+            "w-full max-w-7xl mx-auto",
+            "px-5 sm:px-10 pb-8 md:pb-10 pt-0",
+            "flex flex-col md:flex-row justify-between items-start gap-6 md:gap-10",
+          )}
           style={{ opacity: 0 }}
         >
           {/* Left Side: Logo, Nav, Copyright */}
           <div className="flex flex-col gap-6">
             {/* Logo */}
             <div
-              className={`flex items-center gap-2.5 transition-colors duration-500 ${isDark ? "text-white" : "text-zinc-900"}`}
+              className={cn(
+                "flex items-center gap-2.5",
+                "transition-colors duration-500",
+                isDark ? "text-white" : "text-zinc-900",
+              )}
             >
               <img
                 src={publicPath(isDark ? "/logo white.png" : "/logo black.png")}
@@ -619,7 +656,12 @@ export const CinematicFooter = () => {
 
             {/* Nav Links */}
             <div
-              className={`flex flex-wrap items-center gap-4 sm:gap-5 text-[13px] font-medium transition-colors duration-500 ${isDark ? "text-white/60" : "text-zinc-500"}`}
+              className={cn(
+                "flex flex-wrap items-center gap-4 sm:gap-5",
+                "text-[13px] font-medium",
+                "transition-colors duration-500",
+                isDark ? "text-white/60" : "text-zinc-500",
+              )}
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               <button
@@ -650,7 +692,11 @@ export const CinematicFooter = () => {
 
             {/* Copyright */}
             <span
-              className={`text-[12px] mt-6 transition-colors duration-500 ${bottomText}`}
+              className={cn(
+                "text-[12px] mt-6",
+                "transition-colors duration-500",
+                isDark ? "text-white/25" : "text-zinc-400",
+              )}
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               © {new Date().getFullYear()} Zeinz. All rights reserved.
@@ -659,20 +705,25 @@ export const CinematicFooter = () => {
 
           {/* Right Side: Social Icons */}
           <div className="flex items-center gap-6 md:mt-2">
-            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  href.startsWith("http") ? "noopener noreferrer" : undefined
-                }
-                className={`transition-colors duration-300 ${isDark ? "text-white/40 hover:text-white" : "text-zinc-400 hover:text-zinc-900"}`}
-                aria-label={label}
-              >
-                <Icon size={18} strokeWidth={2} />
-              </a>
-            ))}
+            {SOCIAL_LINKS.map(({ label, href, icon }) => {
+              const Icon = ICON_MAP[icon];
+              if (!Icon) return null;
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className={cn(
+                    "transition-colors duration-300",
+                    isDark ? "text-white/40 hover:text-white" : "text-zinc-400 hover:text-zinc-900",
+                  )}
+                  aria-label={label}
+                >
+                  <Icon size={18} strokeWidth={2} />
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

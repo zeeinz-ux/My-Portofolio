@@ -1,0 +1,18 @@
+# Block Git exposure
+RedirectMatch 404 /\\.git
+
+# Block sensitive files
+RedirectMatch 404 /\\.env
+RedirectMatch 404 /\\.env\\.local
+RedirectMatch 404 /\\.gitignore
+RedirectMatch 404 /\\.gitattributes
+RedirectMatch 404 composer\\.json
+RedirectMatch 404 package\\.json
+RedirectMatch 404 package-lock\\.json
+
+# Security headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

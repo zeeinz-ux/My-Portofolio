@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import { ExternalLink, Github, BookOpen } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
+import { cn } from "@/lib/utils";
 
 export const ProjectsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -57,7 +58,12 @@ export const ProjectsSection = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="py-28 md:py-36 px-6 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white transition-colors duration-500"
+      className={cn(
+        "py-28 md:py-36 px-6",
+        "bg-white dark:bg-zinc-950",
+        "text-zinc-900 dark:text-white",
+        "transition-colors duration-500",
+      )}
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -66,7 +72,11 @@ export const ProjectsSection = () => {
             Selected Work
           </p>
           <h2
-            className="projects-heading text-3xl sm:text-4xl lg:text-6xl font-bold opacity-0"
+            className={cn(
+              "projects-heading",
+              "text-3xl sm:text-4xl lg:text-6xl font-bold",
+              "opacity-0",
+            )}
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Projects
@@ -78,12 +88,19 @@ export const ProjectsSection = () => {
           {PROJECTS.map((project, i) => (
             <div
               key={i}
-              className="project-row opacity-0 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+              className={cn(
+                "project-row opacity-0",
+                "grid lg:grid-cols-2 gap-8 lg:gap-16 items-center",
+              )}
             >
               {/* ── Project Visual ── */}
               <div
                 data-cursor="view"
-                className={`relative aspect-video overflow-hidden rounded-2xl group cursor-none ${i % 2 === 1 ? "lg:order-last" : ""}`}
+                className={cn(
+                  "relative aspect-video overflow-hidden rounded-2xl",
+                  "group cursor-none",
+                  i % 2 === 1 && "lg:order-last",
+                )}
               >
                 {/* Project Image or Fallback Gradient */}
                 {project.image ? (
@@ -133,7 +150,7 @@ export const ProjectsSection = () => {
               </div>
 
               {/* ── Project Text ── */}
-              <div className={i % 2 === 1 ? "lg:pr-4" : "lg:pl-4"}>
+              <div className={cn(i % 2 === 1 ? "lg:pr-4" : "lg:pl-4")}>
                 <p className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono mb-3 tracking-widest">
                   {String(i + 1).padStart(2, "0")} /{" "}
                   {String(PROJECTS.length).padStart(2, "0")}
@@ -155,7 +172,13 @@ export const ProjectsSection = () => {
                   {project.tech.map((t, j) => (
                     <span
                       key={j}
-                      className="text-[11px] px-3 py-1 rounded-full bg-zinc-100 dark:bg-white/[0.07] text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/10 font-medium"
+                      className={cn(
+                        "text-[11px] px-3 py-1 rounded-full",
+                        "bg-zinc-100 dark:bg-white/[0.07]",
+                        "text-zinc-600 dark:text-zinc-400",
+                        "border border-zinc-200 dark:border-white/10",
+                        "font-medium",
+                      )}
                     >
                       {t}
                     </span>
@@ -169,7 +192,13 @@ export const ProjectsSection = () => {
                       href={project.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors underline-offset-4 hover:underline"
+                      className={cn(
+                        "flex items-center gap-2",
+                        "text-sm font-medium",
+                        "text-zinc-700 dark:text-zinc-300",
+                        "hover:text-zinc-900 dark:hover:text-white",
+                        "transition-colors underline-offset-4 hover:underline",
+                      )}
                     >
                       <ExternalLink size={14} />
                       Live Demo
@@ -180,7 +209,13 @@ export const ProjectsSection = () => {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors underline-offset-4 hover:underline"
+                      className={cn(
+                        "flex items-center gap-2",
+                        "text-sm font-medium",
+                        "text-zinc-700 dark:text-zinc-300",
+                        "hover:text-zinc-900 dark:hover:text-white",
+                        "transition-colors underline-offset-4 hover:underline",
+                      )}
                     >
                       <Github size={14} />
                       GitHub
@@ -191,7 +226,13 @@ export const ProjectsSection = () => {
                       href={project.caseStudyUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors underline-offset-4 hover:underline"
+                      className={cn(
+                        "flex items-center gap-2",
+                        "text-sm font-medium",
+                        "text-zinc-700 dark:text-zinc-300",
+                        "hover:text-zinc-900 dark:hover:text-white",
+                        "transition-colors underline-offset-4 hover:underline",
+                      )}
                     >
                       <BookOpen size={14} />
                       Case Study
@@ -199,7 +240,10 @@ export const ProjectsSection = () => {
                   )}
                   {/* Fallback placeholder links */}
                   {project.demoUrl === "#" && (
-                    <span className="flex items-center gap-2 text-sm text-zinc-400 dark:text-zinc-600">
+                    <span className={cn(
+                      "flex items-center gap-2 text-sm",
+                      "text-zinc-400 dark:text-zinc-600",
+                    )}>
                       <ExternalLink size={14} />
                       Demo coming soon
                     </span>
