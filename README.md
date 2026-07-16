@@ -1,4 +1,4 @@
-# Zeinz's Personal Portfolio 🚀
+# Zeinz Personal Portfolio 🚀
 
 Welcome to the repository of my personal portfolio website! This project is a modern, interactive, and high-performance web application built to showcase my skills, projects, and professional background as a Full-Stack Developer.
 
@@ -31,7 +31,7 @@ Want to run this project on your local machine? Follow these simple steps:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/zeeinz-ux/My-Portofolio.git
+   git clone https://github.com/zeeinz-ux/My-Portfolio.git
    cd My-Portofolio
    ```
 
